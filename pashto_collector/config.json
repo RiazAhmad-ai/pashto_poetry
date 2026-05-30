@@ -1,0 +1,73 @@
+{
+  "project_name": "Pashto Poetry Collector",
+  "default_folder_limit": 25,
+  "default_results_per_folder": 1,
+  "default_download_batch_size": 5,
+  "max_queries_per_folder": 4,
+  "download_web_pages": true,
+  "api_contact_email": "",
+  "request_delay_seconds": 1.0,
+  "max_file_mb": {
+    "text": 25,
+    "pdf": 120,
+    "video": 300,
+    "lecture": 300,
+    "audio": 160,
+    "image": 40,
+    "other": 40
+  },
+  "public_sources": {
+    "targeted_sites": true,
+    "internet_archive": true,
+    "open_library": true,
+    "wikimedia": true,
+    "crossref": true,
+    "semantic_scholar": true,
+    "library_of_congress": true,
+    "web_search": true
+  },
+  "wikimedia_projects": [
+    "ps.wikipedia.org",
+    "en.wikipedia.org",
+    "commons.wikimedia.org"
+  ],
+  "targeted_sites": [
+    {
+      "name": "PoetryPashto",
+      "url": "https://poetrypashto.com/category/pashto-poetry/"
+    },
+    {
+      "name": "GPukhto",
+      "url": "https://www.gpukhto.com/"
+    },
+    {
+      "name": "Interlit Pashto Poetry",
+      "url": "https://www.interlitfoundation.org/category/pashto-poetry"
+    },
+    {
+      "name": "EasyLibrary Pashto Books",
+      "url": "https://easylibrary.org/"
+    },
+    {
+      "name": "Pazhwak Foundation",
+      "url": "https://www.pazhwakfoundation.com/"
+    },
+    {
+      "name": "Pashto Academy Journal",
+      "url": "https://pashto.org.pk/"
+    }
+  ],
+  "query_prefixes": [
+    "Pashto poetry",
+    "Pashto literature",
+    "Pashto poems",
+    "Pakhto poetry",
+    "Pukhto poetry",
+    "Afghan Pashto poetry"
+  ],
+  "skip_directory_names": [
+    "pashto_collector",
+    ".git",
+    "__pycache__"
+  ]
+}

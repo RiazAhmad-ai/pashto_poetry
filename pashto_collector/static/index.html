@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pashto Poetry Collector</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Pashto Poetry Collector</h1>
+          <p id="projectRoot" class="muted">Loading project...</p>
+        </div>
+        <div class="statusGrid">
+          <div class="status" id="linkStatus">Links idle</div>
+          <div class="status" id="downloadStatus">Downloads idle</div>
+        </div>
+      </header>
+
+      <section class="controlGrid">
+        <div class="controls">
+          <div class="panelHeader">
+            <h2>Phase 1: Link Collection</h2>
+            <span class="muted">Slow internet mode</span>
+          </div>
+          <div class="presetRow" aria-label="Collection presets">
+            <button class="tiny secondary presetBtn" data-preset="slow">Slow</button>
+            <button class="tiny secondary presetBtn" data-preset="normal">Normal</button>
+            <button class="tiny secondary presetBtn" data-preset="deep">Deep</button>
+          </div>
+          <div class="controlRow">
+            <label>
+              Folder limit
+              <input id="folderLimit" type="number" min="1" max="500" value="25" />
+            </label>
+            <label>
+              Results per folder
+              <input id="resultsPerFolder" type="number" min="1" max="10" value="1" />
+            </label>
+            <button id="startLinksBtn">Start links</button>
+            <button id="stopLinksBtn" class="secondary">Stop links</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="panelHeader">
+            <h2>Phase 2: Data Downloads</h2>
+            <span class="muted">Fast internet mode</span>
+          </div>
+          <div class="controlRow">
+            <label>
+              Batch size
+              <input id="downloadBatchSize" type="number" min="1" max="50" value="5" />
+            </label>
+            <label class="checkLabel">
+              <input id="continuousDownloads" type="checkbox" checked />
+              Keep waiting for new links
+            </label>
+            <button id="startDownloadsBtn">Start downloads</button>
+            <button id="stopDownloadsBtn" class="secondary">Stop downloads</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="nowGrid">
+        <div class="now">
+          <span class="label">Links</span>
+          <span id="linkCurrent">Idle</span>
+        </div>
+        <div class="now">
+          <span class="label">Downloads</span>
+          <span id="downloadCurrent">Idle</span>
+        </div>
+      </section>
+
+      <section class="now sourcesNow">
+        <span class="label">Enabled sources</span>
+        <span id="enabledSources" class="sourceChips">Loading...</span>
+      </section>
+
+      <section class="metrics" aria-label="Statistics">
+        <article>
+          <span>Scanned folders</span>
+          <strong id="scannedFolders">0</strong>
+        </article>
+        <article>
+          <span>Total links</span>
+          <strong id="totalLinks">0</strong>
+        </article>
+        <article>
+          <span>Pending data</span>
+          <strong id="pendingDownloads">0</strong>
+        </article>
+        <article>
+          <span>Downloaded</span>
+          <strong id="downloadedLinks">0</strong>
+        </article>
+        <article>
+          <span>Metadata only</span>
+          <strong id="metadataLinks">0</strong>
+        </article>
+        <article>
+          <span>Failed</span>
+          <strong id="failedLinks">0</strong>
+        </article>
+        <article>
+          <span>Local files</span>
+          <strong id="totalFiles">0</strong>
+        </article>
+        <article>
+          <span>Total size</span>
+          <strong id="totalSizeMetric">0 B</strong>
+        </article>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Link Queue Status</h2>
+            <span id="updatedAt" class="muted"></span>
+          </div>
+          <div id="linkStatusBars" class="bars"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Sources</h2>
+            <span id="sourceCount" class="muted"></span>
+          </div>
+          <div id="sourceBars" class="bars"></div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Link Types</h2>
+          </div>
+          <div id="linkTypeBars" class="bars"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Local File Types</h2>
+          </div>
+          <div id="fileTypeBars" class="bars"></div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Top Domains</h2>
+          </div>
+          <div id="domainBars" class="bars"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Discovered Websites</h2>
+            <div class="headerTools">
+              <span id="domainCount" class="muted">0 domains</span>
+              <select id="domainStatusFilter" class="compactSelect" aria-label="Domain status">
+                <option value="">All domains</option>
+                <option value="candidate">candidate</option>
+                <option value="approved">approved</option>
+                <option value="rejected">rejected</option>
+              </select>
+            </div>
+          </div>
+          <div class="tableWrap domainWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Domain</th>
+                  <th>Status</th>
+                  <th>Links</th>
+                  <th>Sample</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="domainsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>Collected Links</h2>
+          <span id="lastError" class="errorText"></span>
+        </div>
+        <div class="filterBar">
+          <label>
+            Search
+            <input id="linkSearch" type="search" placeholder="Title, folder, source" />
+          </label>
+          <label>
+            Status
+            <select id="statusFilter">
+              <option value="">All statuses</option>
+              <option value="link_found">link_found</option>
+              <option value="downloaded">downloaded</option>
+              <option value="metadata_saved">metadata_saved</option>
+              <option value="download_failed">download_failed</option>
+              <option value="downloading">downloading</option>
+            </select>
+          </label>
+          <label>
+            Source
+            <select id="sourceFilter">
+              <option value="">All sources</option>
+            </select>
+          </label>
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Source</th>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Folder</th>
+                <th>Source URL</th>
+              </tr>
+            </thead>
+            <tbody id="linksBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Download Queue</h2>
+            <span class="muted">Pending and active</span>
+          </div>
+          <div class="tableWrap queueWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Source</th>
+                  <th>Title</th>
+                  <th>Folder</th>
+                  <th>Progress</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody id="downloadQueueBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Failed Downloads</h2>
+            <span class="muted">Needs retry/review</span>
+          </div>
+          <div class="tableWrap queueWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Source</th>
+                  <th>Title</th>
+                  <th>Folder</th>
+                  <th>Error</th>
+                </tr>
+              </thead>
+              <tbody id="failedDownloadsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>Completed Downloads</h2>
+          <span class="muted">Files, pages, and metadata saved</span>
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Source</th>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Saved path</th>
+                <th>Size</th>
+              </tr>
+            </thead>
+            <tbody id="completedDownloadsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>Activity Log</h2>
+          <span class="muted">Latest collector events</span>
+        </div>
+        <div class="tableWrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Phase</th>
+                <th>Level</th>
+                <th>Message</th>
+                <th>Folder</th>
+              </tr>
+            </thead>
+            <tbody id="eventsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>Folder-wise Downloaded Data</h2>
+          <span id="totalSize" class="muted">0 B</span>
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Folder</th>
+                <th>Total</th>
+                <th>Text</th>
+                <th>PDF</th>
+                <th>Video</th>
+                <th>Audio</th>
+                <th>Image</th>
+                <th>Size</th>
+              </tr>
+            </thead>
+            <tbody id="folderStatsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>Scanned Folder Requirements</h2>
+          <button id="refreshFoldersBtn" class="secondary">Rescan folders</button>
+        </div>
+        <div class="tableWrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Folder</th>
+                <th>Search query</th>
+              </tr>
+            </thead>
+            <tbody id="foldersBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
