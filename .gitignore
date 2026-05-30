@@ -1,0 +1,13 @@
+# Python runtime/cache files
+__pycache__/
+*.py[cod]
+
+# Local collector runtime state
+pashto_collector/data/*.db
+pashto_collector/data/*.db-shm
+pashto_collector/data/*.db-wal
+pashto_collector/data/*.log
+pashto_collector/data/state.json
+
+# Local tool/runtime folders
+.antigravitycli/

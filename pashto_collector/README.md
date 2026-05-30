@@ -6,6 +6,15 @@ The goal of this project is to build a large Pashto poetry research archive. It 
 
 ## Quick Start
 
+Install requirements:
+
+```powershell
+cd C:\Users\riaza\Desktop\pashto_poetry
+python -m pip install -r .\pashto_collector\requirements.txt
+```
+
+The current collector uses only Python standard-library modules, so this command should finish without downloading packages. The `requirements.txt` file is included to keep setup predictable if dependencies are added later.
+
 Run the local server:
 
 ```powershell
@@ -590,6 +599,7 @@ pashto_collector/
   app.py
   config.json
   README.md
+  requirements.txt
   collector/
     queries.py
     scanner.py
@@ -613,6 +623,23 @@ pashto_collector/
   data/
     archive.db
 ```
+
+Runtime files under `pashto_collector/data/`, Python `__pycache__` folders, logs, and local database files are ignored by `.gitignore`. Keep code, config, static files, and docs in Git; keep downloaded archive data and SQLite runtime state local unless you intentionally want to publish them.
+
+## GitHub Push
+
+This folder is a Git repository, but no remote is currently configured. To push it to GitHub, first create an empty GitHub repository, then add the remote:
+
+```powershell
+cd C:\Users\riaza\Desktop\pashto_poetry
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git branch -M main
+git add .gitignore pashto_collector\README.md pashto_collector\requirements.txt pashto_collector\app.py pashto_collector\collector pashto_collector\downloader pashto_collector\sources pashto_collector\storage pashto_collector\static pashto_collector\config.json
+git commit -m "Build Pashto poetry collector"
+git push -u origin main
+```
+
+Do not push runtime database/log/cache files unless you deliberately want that data public.
 
 ## Current Development Direction
 
